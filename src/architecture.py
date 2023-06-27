@@ -45,7 +45,7 @@ class ResNet(nn.Module):
     
     def __init__(self, arch_config, input_channels=3, num_classes=2):
         
-        super().__init()
+        super().__init__()
         
         self.net = nn.Sequential()
         self.net.add_module(nn.Sequential(
