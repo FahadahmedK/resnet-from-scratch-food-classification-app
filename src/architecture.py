@@ -3,26 +3,26 @@ from torch.nn import functional as F
 
 class ResidualBlock(nn.Module):
     def __init__(
-        self, outplanes, kernel_size=3, stride=1, padding=1, use_1x1conv=False
+        self, outplanes, kernel_size=3, strides=1, use_1x1conv=False
     ):
         super().__init__()
 
         self.conv1 = nn.LazyConv2d(
             out_channels=outplanes,
             kernel_size=kernel_size,
-            padding=padding,
-            stride=stride,
+            padding=1,
+            stride=strides,
         )
         self.bn1 = nn.LazyBatchNorm2d()
         self.conv2 = nn.LazyConv2d(
             out_channels=outplanes,
             kernel_size=kernel_size,
-            padding=padding,
-            stride=stride,
+            padding=1,
+            stride=1,
         )
         if use_1x1conv:
             self.conv3 = nn.LazyConv2d(
-                out_channels=outplanes, kernel_size=1, stride=stride
+                out_channels=outplanes, kernel_size=1, stride=strides
             )
         else:
             self.conv3 = None
@@ -32,8 +32,7 @@ class ResidualBlock(nn.Module):
     def forward(self, X):
         Y = F.relu(self.bn1(self.conv1(X)))
         Y = self.bn2(self.conv2(Y))
-        print(X.shape)
-        print(Y.shape)
+        print(X.shape, Y.shape)
         if self.conv3:
             X = self.conv3(X)
         Y += X
@@ -63,7 +62,7 @@ class ResNet(nn.Module):
             for j in range(num_res_blocks):
                 if j == 0 and not first_block:
                     blk.append(
-                        ResidualBlock(outplanes=outplanes, use_1x1conv=True, stride=2)
+                        ResidualBlock(outplanes=outplanes, use_1x1conv=True, strides=2)
                     )
                 else:
                     blk.append(ResidualBlock(outplanes=outplanes))
@@ -91,4 +90,3 @@ class ResNet18(ResNet):
         )
     def forward(self, X):
         return self.net(X)
-    
