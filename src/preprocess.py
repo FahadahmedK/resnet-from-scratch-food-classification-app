@@ -33,12 +33,12 @@ def transform(base_dir):
 
 
 def imgshow(image_tensor, title=None):
-    image = image_tensor.numpy().permute((1, 2, 0))
+    image = image_tensor.numpy().transpose((1, 2, 0))
     mean = np.array([0.485, 0.456, 0.406])
     std = np.array([0.229, 0.224, 0.225])
-    image = image * std + mean
+    image = (image * std) + mean
     image = np.clip(image, 0, 1)
-    plt.show(image)
+    plt.imshow(image)
     if title is not None:
         plt.title(title)
     plt.pause(0.001)
