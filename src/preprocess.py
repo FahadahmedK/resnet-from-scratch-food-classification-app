@@ -16,7 +16,7 @@ class ImageDataset(Dataset):
         self.image_paths = self._get_image_paths()
 
     def __len__(self):
-        return len(os.listdir(self.data_dir))
+        return len(self.image_paths)
 
     def __getitem__(self, idx):
         image_path = self.image_paths[idx]
@@ -107,13 +107,14 @@ def imgshow(image_tensor, title=None):
 # @click.option("--data_dir", default="data/raw", help="Path to raw data")
 # @click.option("--output_dir", default="data/processed", help="Path to processed data")
 @click.option(
-    "--config_path", default="configs/preprocess.yaml", help="Path to config file"
+    "--config_path", help="Path to config file"
 )
 def main(config_path):
     config = load_yaml_config(config_path)
     data_dir = config["data_dir"]
     output_dir = config["output_dir"]
-    preprocess(data_dir, output_dir)
+    batch_size = config["batch_size"]
+    preprocess(data_dir, output_dir, batch_size)
 
 
 if __name__ == "__main__":
