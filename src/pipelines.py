@@ -1,22 +1,22 @@
 from kfp import dsl
-from kfp.dsl import component, pipeline, InputPath, OutputPath
+from kfp.dsl import component, pipeline, Artifact, Output
 from preprocess import preprocess_images
 
-@dsl.component(
+@component(
     packages_to_install=["torchvision", "Pillow", "click", "torch", "numpy"],
     output_component_file="preprocessing_component.yaml",
 )
 def preprocessing_op(
     data_dir: str,
-    output_dir: OutputPath(),
-    batch_size: int = 32,
-) -> str:
+    output_dir: str,
+    processed_data_artifact: Output[Artifact]
+):
     import os
     import numpy as np
     from torchvision import transforms
     from torch.utils.data import DataLoader, Dataset
     from torchvision.utils import save_image
-    preprocess_images(data_dir, output_dir)
+    preprocess_images(data_dir, output_dir, batch_size=32)
     return output_dir
 
 @pipeline(
