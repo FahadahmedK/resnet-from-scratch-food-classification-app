@@ -67,7 +67,7 @@ def preprocess(data_dir, output_dir, batch_size):
         data_dir=os.path.join(data_dir, "train"), transform=transform_train
     )
     train_loader = DataLoader(
-        train_dataset, batch_size=batch_size, shuffle=True, num_workers=4
+        train_dataset, batch_size=batch_size, shuffle=True, num_workers=2
     )
 
     for images, labels in train_loader:
@@ -80,7 +80,7 @@ def preprocess(data_dir, output_dir, batch_size):
         data_dir=os.path.join(data_dir, "test"), transform=transform_test
     )
     test_loader = DataLoader(
-        test_dataset, batch_size=batch_size, shuffle=False, num_workers=4
+        test_dataset, batch_size=batch_size, shuffle=False, num_workers=2
     )
 
     for images, labels in test_loader:
@@ -106,9 +106,8 @@ def imgshow(image_tensor, title=None):
 @click.command()
 # @click.option("--data_dir", default="data/raw", help="Path to raw data")
 # @click.option("--output_dir", default="data/processed", help="Path to processed data")
-@click.option(
-    "--config_path", help="Path to config file"
-)
+@click.argument(
+    "config_path", type=click.Path(exists=True))
 def main(config_path):
     config = load_yaml_config(config_path)
     data_dir = config["data_dir"]
