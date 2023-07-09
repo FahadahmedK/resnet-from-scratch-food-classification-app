@@ -37,7 +37,7 @@ class ImageDataset(Dataset):
         return image_paths
 
 
-def preprocess(data_dir, output_dir, batch_size):
+def preprocess(data_dir, output_dir, batch_size=32):
     train_output_dir = os.path.join(output_dir, "train")
     test_output_dir = os.path.join(output_dir, "test")
     os.makedirs(train_output_dir, exist_ok=True)
