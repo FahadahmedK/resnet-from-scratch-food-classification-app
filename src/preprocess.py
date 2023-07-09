@@ -7,6 +7,7 @@ from torchvision.utils import save_image
 from PIL import Image
 import click
 from utils import load_yaml_config
+from kfp import dsl
 
 
 class ImageDataset(Dataset):
@@ -37,7 +38,7 @@ class ImageDataset(Dataset):
         return image_paths
 
 
-def preprocess(data_dir, output_dir, batch_size=32):
+def preprocess_images(data_dir: str, output_dir: str, batch_size: int =32):
     train_output_dir = os.path.join(output_dir, "train")
     test_output_dir = os.path.join(output_dir, "test")
     os.makedirs(train_output_dir, exist_ok=True)
@@ -88,6 +89,19 @@ def preprocess(data_dir, output_dir, batch_size=32):
             image_path = os.path.join(test_output_dir, label, f"{label}_{i}.jpg")
             os.makedirs(image_path, exist_ok=True)
             save_image(image, os.path.join(image_path, f"{label}_{i}.jpg"))
+    
+    output_artifact = dsl.Artifact(
+        name='processed_images',
+        artifact_type='images',
+        uri=output_dir
+    )
+    output_artifact.metadata['input_dir'] = data_dir
+    output_artifact.metadata['output_dir'] = output_dir
+    output_artifact.metadata["transformations"] = str(transform)
+    output_artifact.metadata["processed_images_count"] = str(len(os.listdir(output_dir)))
+
+    dsl.get_pipeline_conf().add_pipeline_output(output_artifact)
+
     return output_dir
 
 
