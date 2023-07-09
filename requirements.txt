@@ -1,6 +1,8 @@
 torch
 torchvision
+tqdm
 matplotlib
 numpy
 pytest
 jupyter
+click
