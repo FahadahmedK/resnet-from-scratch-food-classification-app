@@ -32,4 +32,4 @@ def ml_pipeline(
 
 if __name__ == "__main__":
     import kfp.compiler as compiler
-    compiler.Compiler().compile(pipeline_func=pipeline, package_path="configs/pipeline.yaml")
+    compiler.Compiler().compile(pipeline_func=ml_pipeline, package_path="configs/pipeline.yaml")
