@@ -1,5 +1,5 @@
 from kfp import dsl
-from kfp.dsl import component, pipeline, Artifact, Output
+from kfp.dsl import component, Artifact, Output
 from preprocess import preprocess_images
 
 @component(
@@ -19,7 +19,7 @@ def preprocessing_op(
     preprocess_images(data_dir, output_dir, batch_size=32)
     return output_dir
 
-@pipeline(
+@dsl.pipeline(
     name="ML Pipeline",
     description="Pipeline for image classification"
 )
