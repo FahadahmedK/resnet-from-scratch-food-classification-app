@@ -22,6 +22,7 @@ def predict(model, image):
         _, predicted = torch.max(output.data, 1)
         return predicted.item()
 
+
 @click.command()
 @click.option("--image_path", type=click.Path(exists=True))
 def main(image_path):
@@ -36,9 +37,6 @@ def main(image_path):
 
     print(f"Prediction: {prediction}")
 
+
 if __name__ == "__main__":
     main()
-
-
-
-

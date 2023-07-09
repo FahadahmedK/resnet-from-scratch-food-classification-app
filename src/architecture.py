@@ -1,10 +1,9 @@
 from torch import nn
 from torch.nn import functional as F
 
+
 class ResidualBlock(nn.Module):
-    def __init__(
-        self, outplanes, kernel_size=3, strides=1, use_1x1conv=False
-    ):
+    def __init__(self, outplanes, kernel_size=3, strides=1, use_1x1conv=False):
         super().__init__()
 
         self.conv1 = nn.LazyConv2d(
@@ -43,8 +42,9 @@ class ResNet(nn.Module):
     def __init__(self, arch_config, input_channels=3, num_classes=2):
         super().__init__()
 
-        self.net =  nn.Sequential(
-                nn.Sequential(nn.Conv2d(
+        self.net = nn.Sequential(
+            nn.Sequential(
+                nn.Conv2d(
                     in_channels=input_channels,
                     out_channels=64,
                     kernel_size=7,
@@ -86,7 +86,10 @@ class ResNet(nn.Module):
 class ResNet18(ResNet):
     def __init__(self, input_channels=3, num_classes=2):
         super().__init__(
-            ((2, 64), (2, 128), (2, 256), (2, 512)), input_channels=input_channels, num_classes=num_classes
+            ((2, 64), (2, 128), (2, 256), (2, 512)),
+            input_channels=input_channels,
+            num_classes=num_classes,
         )
+
     def forward(self, X):
         return self.net(X)
