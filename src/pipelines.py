@@ -8,16 +8,16 @@ from preprocess import preprocess_images
 )
 def preprocessing_op(
     data_dir: str,
-    output_dir: OutputPath("Processed Images Directory"),
+    output_dir: OutputPath(),
     batch_size: int = 32,
-) -> OutputPath("Processed Images Directory"):
+) -> str:
     import os
     import numpy as np
     from torchvision import transforms
     from torch.utils.data import DataLoader, Dataset
     from torchvision.utils import save_image
     preprocess_images(data_dir, output_dir)
-
+    return output_dir
 
 @pipeline(
     name="ML Pipeline",
