@@ -27,7 +27,7 @@ def ml_pipeline(
     data_dir: str,
     output_dir: str,
 ):
-    preprocessing_task = preprocessing_op(data_dir, output_dir)
+    preprocessing_task = preprocessing_op(data_dir=data_dir, output_dir=output_dir)
 
 
 if __name__ == "__main__":

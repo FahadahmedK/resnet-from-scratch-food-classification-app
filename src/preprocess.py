@@ -97,8 +97,8 @@ def preprocess_images(data_dir: str, output_dir: str, batch_size: int =32):
     )
     output_artifact.metadata['input_dir'] = data_dir
     output_artifact.metadata['output_dir'] = output_dir
-    output_artifact.metadata["transformations"] = str(transform)
-    output_artifact.metadata["processed_images_count"] = str(len(os.listdir(output_dir)))
+    #output_artifact.metadata["transformations"] = str(transform)
+    #output_artifact.metadata["processed_images_count"] = str(len(os.listdir(output_dir)))
 
     dsl.get_pipeline_conf().add_pipeline_output(output_artifact)
 
