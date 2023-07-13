@@ -1,4 +1,6 @@
+import shutil
 import kfp
+
 
 # For creating the pipeline
 from kfp import dsl
@@ -51,21 +53,22 @@ from kfp.dsl import (
 @component(
     packages_to_install=["pandas", "openpyxl"],
 )
-def download_data(url:str, output_csv:Output[Dataset]):
+def download_data(url:str, local_path: str, output_csv:Output[Dataset]):
     import pandas as pd
 
     # Use pandas excel reader
     df = pd.read_excel(url)
     df = df.sample(frac=1).reset_index(drop=True)
     df.to_csv(output_csv.path, index=False)
+    df.to_csv(local_path, index=False)
 
 
 @dsl.pipeline(
     name="ML Pipeline",
     description="Pipeline for image classification"
 )
-def ml_pipeline(url: str):
-    download_task = download_data(url=url)
+def ml_pipeline(url: str, local_path: str):
+    download_task = download_data(url=url, local_path=local_path)
 
 if __name__ == "__main__":
     import kfp.compiler as compiler

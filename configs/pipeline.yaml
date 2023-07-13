@@ -2,12 +2,15 @@
 # Name: ml-pipeline
 # Description: Pipeline for image classification
 # Inputs:
+#    local_path: str
 #    url: str
 components:
   comp-download-data:
     executorLabel: exec-download-data
     inputDefinitions:
       parameters:
+        local_path:
+          parameterType: STRING
         url:
           parameterType: STRING
     outputDefinitions:
@@ -42,10 +45,10 @@ deploymentSpec:
 
           '
         - "\nimport kfp\nfrom kfp import dsl\nfrom kfp.dsl import *\nfrom typing import\
-          \ *\n\ndef download_data(url:str, output_csv:Output[Dataset]):\n    import\
-          \ pandas as pd\n\n    # Use pandas excel reader\n    df = pd.read_excel(url)\n\
+          \ *\n\ndef download_data(url:str, local_path: str, output_csv:Output[Dataset]):\n\
+          \    import pandas as pd\n\n    # Use pandas excel reader\n    df = pd.read_excel(url)\n\
           \    df = df.sample(frac=1).reset_index(drop=True)\n    df.to_csv(output_csv.path,\
-          \ index=False)\n\n"
+          \ index=False)\n    df.to_csv(local_path, index=False)\n\n"
         image: python:3.7
 pipelineInfo:
   description: Pipeline for image classification
@@ -60,12 +63,16 @@ root:
           name: comp-download-data
         inputs:
           parameters:
+            local_path:
+              componentInputParameter: local_path
             url:
               componentInputParameter: url
         taskInfo:
           name: download-data
   inputDefinitions:
     parameters:
+      local_path:
+        parameterType: STRING
       url:
         parameterType: STRING
 schemaVersion: 2.1.0
