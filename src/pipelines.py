@@ -7,6 +7,7 @@ from kfp import dsl
 
 # For building components
 from kfp.dsl import component
+from kubernetes.client import V1VolumeMount, V1Volume
 
 # Type annotations for the component artifacts
 from kfp.dsl import (
@@ -53,13 +54,17 @@ from kfp.dsl import (
 @component(
     packages_to_install=["pandas", "openpyxl"],
 )
-def download_data(url:str, local_path: str, output_csv:Output[Dataset]):
+
+def download_op(url:str, local_path: str, output_csv:Output[Dataset]):
+    
     import pandas as pd
 
     # Use pandas excel reader
     df = pd.read_excel(url)
     df = df.sample(frac=1).reset_index(drop=True)
     df.to_csv(output_csv.path, index=False)
+    
+    
     df.to_csv(local_path, index=False)
 
 
@@ -68,7 +73,19 @@ def download_data(url:str, local_path: str, output_csv:Output[Dataset]):
     description="Pipeline for image classification"
 )
 def ml_pipeline(url: str, local_path: str):
-    download_task = download_data(url=url, local_path=local_path)
+    
+    #local_volume = dsl.VolumeOp(
+    #    name="local-storage",
+    #    resource_name="local-storage",
+    #    size="1Gi",
+    #    storage_class="local-storage",
+    #   volume='hostPath',
+    #    path=local_path
+    #)
+
+
+    download_task = download_op(url=url, local_path=local_path).add_pvolumes({local_path: dsl.PipelineVolume(pvc="local-storage")})
+
 
 if __name__ == "__main__":
     import kfp.compiler as compiler

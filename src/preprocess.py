@@ -90,18 +90,6 @@ def preprocess_images(data_dir: str, output_dir: str, batch_size: int =32):
             os.makedirs(image_path, exist_ok=True)
             save_image(image, os.path.join(image_path, f"{label}_{i}.jpg"))
     
-    output_artifact = dsl.Artifact(
-        name='processed_images',
-        artifact_type='images',
-        uri=output_dir
-    )
-    output_artifact.metadata['input_dir'] = data_dir
-    output_artifact.metadata['output_dir'] = output_dir
-    #output_artifact.metadata["transformations"] = str(transform)
-    #output_artifact.metadata["processed_images_count"] = str(len(os.listdir(output_dir)))
-
-    dsl.get_pipeline_conf().add_pipeline_output(output_artifact)
-
     return output_dir
 
 
@@ -127,7 +115,7 @@ def main(config_path):
     data_dir = config["data_dir"]
     output_dir = config["output_dir"]
     batch_size = config["batch_size"]
-    preprocess(data_dir, output_dir, batch_size)
+    preprocess_images(data_dir, output_dir, batch_size)
 
 
 if __name__ == "__main__":
