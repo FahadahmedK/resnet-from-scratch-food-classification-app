@@ -59,7 +59,7 @@ class ResNet(nn.Module):
         def SuperBlock(num_res_blocks, outplanes, first_block=False):
             blk = []
             for j in range(num_res_blocks):
-                if j == 0 and not first_block: # this is because input channels of the first block are 64 from the previous layer
+                if j == 0 and not first_block: # "not first block" because input channels of the first block are already 64 from the previous layer
                     blk.append(
                         ResidualBlock(outplanes=outplanes, use_1x1conv=True, strides=2)
                     )
